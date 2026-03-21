@@ -1,0 +1,1029 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kila's Journal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+      :root {
+        --rosewater: #fdf0f3; --blush: #f9dce5; --petal: #f2b8cb;
+        --rose: #e8849f; --dusty: #d4607a;
+        --warm: #fcf0f4; --text: #2d1520; --text-2: #7a4055;
+        --text-3: #b07888; --text-4: #d4aabb;
+        --mint: #9ecfbd; --gold: #e8c9a8; --lavender: #c8b4d8;
+        --card: rgba(255,255,255,0.92); --border: rgba(242,184,203,0.4);
+        --shadow-sm: 0 2px 12px rgba(180,80,110,0.08);
+        --shadow-md: 0 8px 32px rgba(180,80,110,0.13);
+        --shadow-lg: 0 20px 60px rgba(180,80,110,0.18);
+      }
+      html { scroll-behavior: smooth; }
+      body { font-family: "DM Sans", sans-serif; background: var(--rosewater); color: var(--text); min-height: 100vh; }
+      body::before {
+        content: ""; position: fixed; inset: 0;
+        background:
+          radial-gradient(ellipse 80% 60% at 0% 0%, rgba(249,220,229,0.55) 0%, transparent 60%),
+          radial-gradient(ellipse 60% 50% at 100% 100%, rgba(232,132,159,0.12) 0%, transparent 55%),
+          radial-gradient(ellipse 50% 40% at 50% 50%, rgba(253,240,243,0.35) 0%, transparent 70%);
+        pointer-events: none; z-index: 0;
+      }
+      .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 20px 100px; }
+
+      .header { padding: 48px 0 36px; display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 20px; }
+      .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 3.5px; text-transform: uppercase; color: var(--rose); margin-bottom: 10px; }
+      .header-title { font-family: "Cormorant Garamond", serif; font-size: clamp(2.6rem, 6vw, 4rem); font-weight: 500; line-height: 1; letter-spacing: -1px; }
+      .header-title em { font-style: italic; color: var(--dusty); }
+      .header-sub { font-size: 13px; color: var(--text-3); margin-top: 10px; line-height: 1.5; }
+      .date-pill { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 12px 20px; box-shadow: var(--shadow-sm); text-align: right; }
+      .date-num { font-family: "Cormorant Garamond", serif; font-size: 2rem; font-weight: 600; color: var(--dusty); line-height: 1; }
+      .date-lbl { font-size: 11px; color: var(--text-3); font-weight: 500; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+
+      .tabs { display: flex; gap: 6px; margin-bottom: 28px; background: var(--card); border: 1.5px solid var(--border); border-radius: 16px; padding: 6px; box-shadow: var(--shadow-sm); }
+      .tab { flex: 1; background: transparent; border: none; color: var(--text-3); font-family: "DM Sans", sans-serif; font-size: 12px; font-weight: 500; padding: 9px 8px; border-radius: 11px; cursor: pointer; transition: all 0.22s; white-space: nowrap; }
+      .tab:hover { color: var(--dusty); background: var(--blush); }
+      .tab.active { background: linear-gradient(135deg, var(--rose), var(--dusty)); color: white; font-weight: 600; box-shadow: 0 3px 14px rgba(212,96,122,0.35); }
+
+      .card { background: var(--card); border: 1.5px solid var(--border); border-radius: 20px; padding: 24px; margin-bottom: 16px; box-shadow: var(--shadow-sm); transition: box-shadow 0.2s; }
+      .card:hover { box-shadow: var(--shadow-md); }
+      .ch { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+      .ct { font-family: "Cormorant Garamond", serif; font-size: 1.15rem; font-weight: 600; color: var(--text); }
+      .cbadge { font-size: 10.5px; font-weight: 600; color: var(--rose); background: var(--blush); padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
+
+      .prog-strip { display: grid; grid-template-columns: repeat(5,1fr); gap: 10px; margin-bottom: 16px; }
+      .prog-item { background: var(--card); border: 1.5px solid var(--border); border-radius: 16px; padding: 14px 10px; text-align: center; box-shadow: var(--shadow-sm); position: relative; overflow: hidden; transition: transform 0.18s, box-shadow 0.18s; }
+      .prog-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+      .prog-bar-wrap { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--blush); }
+      .prog-bar-fill { height: 100%; background: linear-gradient(90deg, var(--petal), var(--rose)); transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
+      .prog-num { font-family: "Cormorant Garamond", serif; font-size: 1.4rem; font-weight: 600; line-height: 1; }
+      .prog-lbl { font-size: 9px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+      .prog-pct { font-size: 10px; color: var(--rose); font-weight: 500; margin-top: 2px; }
+
+      .mood-row { display: flex; gap: 8px; flex-wrap: wrap; }
+      .mood-btn { width: 44px; height: 44px; border-radius: 14px; border: 1.5px solid var(--border); background: var(--warm); font-size: 1.35rem; cursor: pointer; transition: all 0.18s cubic-bezier(0.34,1.56,0.64,1); display: flex; align-items: center; justify-content: center; }
+      .mood-btn:hover { transform: scale(1.18) rotate(-4deg); border-color: var(--petal); }
+      .mood-btn.active { border-color: var(--rose); background: var(--blush); transform: scale(1.15); box-shadow: 0 4px 16px rgba(232,132,159,0.3); }
+
+      .sched-list { display: flex; flex-direction: column; gap: 8px; }
+      .sched-item { display: flex; align-items: center; gap: 14px; padding: 13px 16px; border-radius: 14px; border: 1.5px solid transparent; background: var(--warm); cursor: pointer; transition: all 0.2s; user-select: none; }
+      .sched-item:hover { border-color: var(--petal); background: var(--blush); transform: translateX(3px); }
+      .sched-item.done { background: rgba(158,207,189,0.1); border-color: rgba(158,207,189,0.35); }
+      .sched-item.done .sn { color: var(--text-3); text-decoration: line-through; }
+      .scheck { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--petal); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; color: transparent; background: white; transition: all 0.2s; }
+      .sched-item.done .scheck { background: var(--mint); border-color: var(--mint); color: white; }
+      .stime { font-size: 10.5px; font-weight: 600; color: var(--rose); min-width: 88px; }
+      .sched-item.done .stime { color: var(--text-4); }
+      .sinfo { flex: 1; min-width: 0; }
+      .sn { font-size: 13.5px; font-weight: 500; color: var(--text); }
+      .sd { font-size: 11.5px; color: var(--text-3); margin-top: 1px; }
+      .cat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+      .photo-area { border: 2px dashed var(--petal); border-radius: 16px; padding: 28px; text-align: center; background: var(--warm); cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; min-height: 90px; }
+      .photo-area:hover { border-color: var(--rose); background: var(--blush); }
+      .photo-area.has-img { border-style: solid; border-color: rgba(242,184,203,0.5); padding: 0; }
+      .photo-area img { width: 100%; max-height: 280px; object-fit: cover; border-radius: 14px; display: block; }
+      .photo-placeholder { text-align: center; pointer-events: none; }
+      .photo-overlay { position: absolute; inset: 0; background: rgba(212,96,122,0); display: flex; align-items: center; justify-content: center; transition: background 0.2s; border-radius: 14px; opacity: 0; }
+      .has-img:hover .photo-overlay { background: rgba(212,96,122,0.4); opacity: 1; }
+      .photo-change { color: white; font-size: 12px; font-weight: 600; background: rgba(0,0,0,0.3); padding: 8px 16px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.6); }
+
+      .notes-area { width: 100%; min-height: 100px; border: 1.5px solid var(--border); border-radius: 14px; padding: 14px 16px; font-family: "DM Sans", sans-serif; font-size: 13.5px; line-height: 1.6; color: var(--text); background: var(--warm); resize: vertical; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+      .notes-area:focus { border-color: var(--rose); box-shadow: 0 0 0 3px rgba(232,132,159,0.1); }
+      .notes-area::placeholder { color: var(--text-4); }
+
+      .btn-primary { background: linear-gradient(135deg, var(--rose), var(--dusty)); color: white; border: none; padding: 11px 26px; border-radius: 25px; font-family: "DM Sans", sans-serif; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 16px rgba(212,96,122,0.3); }
+      .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,96,122,0.42); }
+      .btn-primary:active { transform: translateY(0); }
+      .btn-ghost { background: transparent; border: 1.5px solid var(--border); color: var(--text-2); padding: 9px 18px; border-radius: 20px; font-family: "DM Sans", sans-serif; font-weight: 500; font-size: 12px; cursor: pointer; transition: all 0.2s; }
+      .btn-ghost:hover { border-color: var(--rose); color: var(--dusty); background: var(--blush); }
+      .btn-ghost.active { border-color: var(--rose); color: var(--dusty); background: var(--blush); font-weight: 600; }
+
+      .filter-row { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; }
+      .filter-lbl { font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; margin-right: 4px; }
+
+      .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px,1fr)); gap: 10px; }
+      .stat-item { background: var(--warm); border-radius: 14px; padding: 14px 10px; text-align: center; border: 1.5px solid var(--border); }
+      .stat-num { font-family: "Cormorant Garamond", serif; font-size: 1.8rem; font-weight: 600; color: var(--dusty); line-height: 1; }
+      .stat-lbl { font-size: 10px; color: var(--text-3); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+      .week-cal { display: grid; grid-template-columns: repeat(7,1fr); gap: 8px; margin-bottom: 20px; }
+      .wc { background: var(--warm); border: 1.5px solid var(--border); border-radius: 14px; padding: 10px 4px; text-align: center; }
+      .wc.today { border-color: var(--rose); background: var(--blush); }
+      .wc-n { font-size: 9.5px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.8px; }
+      .wc-d { font-family: "Cormorant Garamond", serif; font-size: 1.3rem; font-weight: 600; color: var(--text); line-height: 1.2; }
+      .wc-m { font-size: 0.9rem; margin-top: 1px; }
+      .wc-bar { height: 3px; background: var(--blush); border-radius: 2px; margin: 5px 4px 0; }
+      .wc-bf { height: 100%; background: linear-gradient(90deg, var(--petal), var(--rose)); border-radius: 2px; }
+      .wc-p { font-size: 9px; color: var(--text-4); margin-top: 2px; }
+
+      .log-item { background: var(--warm); border: 1.5px solid var(--border); border-radius: 14px; padding: 14px 18px; margin-bottom: 8px; }
+      .log-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+      .log-date { font-size: 13px; font-weight: 600; color: var(--text); }
+      .log-meta { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+      .log-pct { font-family: "Cormorant Garamond", serif; font-size: 1.5rem; font-weight: 600; flex-shrink: 0; }
+      .log-note { font-size: 11px; color: var(--text-3); font-style: italic; margin-top: 6px; line-height: 1.5; }
+
+      .mood-summary { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+      .mood-ci { background: var(--warm); border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; gap: 8px; }
+      .mce { font-size: 1.2rem; }
+      .mcv { font-family: "Cormorant Garamond", serif; font-size: 1.3rem; font-weight: 600; color: var(--dusty); }
+      .mcl { font-size: 10px; color: var(--text-3); }
+
+      .mood-tl { display: flex; gap: 4px; align-items: flex-end; padding: 8px 0; }
+      .mood-bw { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+      .mood-es { font-size: 0.85rem; }
+      .mood-b { width: 100%; background: linear-gradient(180deg, var(--blush), var(--petal)); border-radius: 6px 6px 2px 2px; min-height: 4px; }
+      .mood-bl { font-size: 8.5px; color: var(--text-4); text-align: center; }
+
+      .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--petal), transparent); margin: 20px 0; }
+
+      .chart-legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; }
+      .leg-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-2); font-weight: 500; }
+      .leg-dot { width: 9px; height: 9px; border-radius: 3px; }
+
+      .streak-banner { background: linear-gradient(135deg, var(--blush), #fde8ee); border: 1.5px solid var(--petal); border-radius: 16px; padding: 18px 22px; text-align: center; margin-top: 14px; }
+      .streak-banner p { font-size: 13px; color: var(--dusty); font-weight: 500; line-height: 1.6; }
+
+      .habit-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+      .hname { font-size: 12px; font-weight: 600; color: var(--text-2); min-width: 130px; line-height: 1.3; }
+      .hdots { display: flex; gap: 4px; flex-wrap: wrap; flex: 1; }
+      .h-dot { width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--border); background: var(--warm); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; font-size: 9px; color: transparent; user-select: none; }
+      .h-dot:hover { border-color: var(--rose); background: var(--blush); }
+      .h-dot.filled { background: linear-gradient(135deg, var(--petal), var(--rose)); border-color: var(--rose); color: white; }
+      .hcount { font-size: 10px; color: var(--text-4); min-width: 36px; text-align: right; }
+
+      .input-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+      .txt-input, .sel-input { border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 14px; font-family: "DM Sans", sans-serif; font-size: 13px; background: var(--warm); color: var(--text); outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+      .txt-input { flex: 1; min-width: 160px; }
+      .txt-input:focus, .sel-input:focus { border-color: var(--rose); box-shadow: 0 0 0 3px rgba(232,132,159,0.1); }
+      .txt-input::placeholder { color: var(--text-4); }
+
+      .toast { position: fixed; bottom: 28px; right: 28px; padding: 13px 20px; border-radius: 14px; font-size: 13px; font-weight: 500; box-shadow: var(--shadow-lg); z-index: 999; animation: toastIn 0.3s cubic-bezier(0.34,1.56,0.64,1); max-width: 320px; line-height: 1.4; }
+      .toast.success { background: #0d2b1a; color: #7de8b0; }
+      .toast.error { background: #2b0d15; color: #f8b0c0; }
+      .toast.info { background: var(--text); color: #fdf0f3; }
+      @keyframes toastIn { from { transform: translateY(20px) scale(0.95); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+      @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes popUp { from { opacity: 0; transform: scale(0.85) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+      .fade-up { animation: fadeUp 0.36s cubic-bezier(0.4,0,0.2,1) both; }
+      .hidden { display: none !important; }
+
+      @media (max-width: 640px) {
+        .header { grid-template-columns: 1fr; }
+        .prog-strip { grid-template-columns: repeat(3,1fr); }
+        .week-cal { gap: 4px; }
+        .hname { min-width: 90px; font-size: 11px; }
+        .h-dot { width: 14px; height: 14px; }
+        .tab { font-size: 10.5px; padding: 8px 4px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <!-- HEADER -->
+      <div class="header">
+        <div>
+          <div class="eyebrow">✦ Personal Growth Tracker</div>
+          <h1 class="header-title">Kila's <em>Journal</em></h1>
+          <p class="header-sub" id="headerSub"></p>
+        </div>
+        <div class="date-pill">
+          <div class="date-num" id="dateDay">—</div>
+          <div class="date-lbl" id="dateLbl">—</div>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="tabs">
+        <button class="tab active" onclick="showTab('today',this)">Hari Ini</button>
+        <button class="tab" onclick="showTab('weekly',this)">Rekap Mingguan</button>
+        <button class="tab" onclick="showTab('analytics',this)">Analitik</button>
+        <button class="tab" onclick="showTab('habits',this)">Kebiasaan</button>
+      </div>
+
+      <!-- HARI INI -->
+      <div id="tab-today" class="fade-up">
+        <div class="prog-strip" id="progStrip"></div>
+        <div class="card">
+          <div class="ch">
+            <div class="ct">Kila lagi ngerasa gimana hari ini?</div>
+            <div class="cbadge" id="moodLbl">Pilih mood</div>
+          </div>
+          <div class="mood-row">
+            <button class="mood-btn" data-mood="😊" onclick="setMood('😊')">😊</button>
+            <button class="mood-btn" data-mood="🥰" onclick="setMood('🥰')">🥰</button>
+            <button class="mood-btn" data-mood="😌" onclick="setMood('😌')">😌</button>
+            <button class="mood-btn" data-mood="🤗" onclick="setMood('🤗')">🤗</button>
+            <button class="mood-btn" data-mood="😔" onclick="setMood('😔')">😔</button>
+            <button class="mood-btn" data-mood="😤" onclick="setMood('😤')">😤</button>
+            <button class="mood-btn" data-mood="😴" onclick="setMood('😴')">😴</button>
+            <button class="mood-btn" data-mood="🥺" onclick="setMood('🥺')">🥺</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch">
+            <div class="ct">Jadwal Hari Ini</div>
+            <div class="cbadge" id="schedBadge">0 selesai</div>
+          </div>
+          <div class="sched-list" id="schedList"></div>
+        </div>
+        <div class="card">
+          <div class="ch">
+            <div class="ct">Foto Kegiatan Kila Hari Ini</div>
+            <div class="cbadge" id="photoBadge">Belum ada foto</div>
+          </div>
+          <div class="photo-area" id="photoArea" onclick="document.getElementById('photoInput').click()">
+            <div class="photo-placeholder" id="photoPlaceholder">
+              <div style="font-size:2rem;margin-bottom:10px;">📸</div>
+              <div style="font-size:13px;color:var(--text-3);font-weight:500;">Tap untuk upload foto kamu hari ini</div>
+              <div style="font-size:11px;color:var(--text-4);margin-top:5px;">Abadikan momen produktifmu ya, Kila 🌸</div>
+            </div>
+            <img id="photoPreview" style="display:none;" alt="Foto kegiatan Kila" />
+            <div class="photo-overlay" id="photoOverlay"><span class="photo-change">Ganti Foto</span></div>
+          </div>
+          <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="handlePhoto(event)" />
+        </div>
+        <div class="card">
+          <div class="ch">
+            <div class="ct">Catatan Hari Ini</div>
+            <span style="font-size:11px;color:var(--text-4);">tersimpan otomatis ✓</span>
+          </div>
+          <textarea class="notes-area" id="dailyNotes" placeholder="Ceritain hari ini yuk! Apa yang berhasil kamu pelajari, bagaimana perasaanmu, atau hal kecil yang bikin kamu senang hari ini 💕"></textarea>
+          <div style="display:flex;justify-content:flex-end;margin-top:12px;">
+            <button class="btn-primary" onclick="saveDay()">Simpan Hari Ini 🌸</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- WEEKLY -->
+      <div id="tab-weekly" class="hidden fade-up">
+        <div class="card">
+          <div class="ch"><div class="ct">Rekap Mingguan</div></div>
+          <div class="filter-row">
+            <span class="filter-lbl">Lihat</span>
+            <button class="btn-ghost active" onclick="setWeekFilter('thisweek',this)">Minggu Ini</button>
+            <button class="btn-ghost" onclick="setWeekFilter('lastweek',this)">Minggu Lalu</button>
+            <button class="btn-ghost" onclick="setWeekFilter('month',this)">Bulan Ini</button>
+            <button class="btn-ghost" onclick="setWeekFilter('lastmonth',this)">Bulan Lalu</button>
+          </div>
+          <div class="week-cal" id="weekCal"></div>
+          <div class="divider"></div>
+          <div class="ct" style="font-size:1rem;margin-bottom:12px;">Mood Kila di Periode Ini</div>
+          <div class="mood-summary" id="weekMoodSum"></div>
+          <div class="divider"></div>
+          <div class="stat-grid" id="weekStats"></div>
+          <div class="divider"></div>
+          <div id="weekLog"></div>
+        </div>
+      </div>
+
+      <!-- ANALYTICS -->
+      <div id="tab-analytics" class="hidden fade-up">
+        <div class="card">
+          <div class="ch"><div class="ct">Grafik Progress Belajar</div></div>
+          <div class="filter-row">
+            <span class="filter-lbl">Tampilkan</span>
+            <button class="btn-ghost active" onclick="setAnalFilter('daily',this)">14 Hari</button>
+            <button class="btn-ghost" onclick="setAnalFilter('weekly',this)">8 Minggu</button>
+            <button class="btn-ghost" onclick="setAnalFilter('monthly',this)">6 Bulan</button>
+          </div>
+          <div id="chartWrap" style="width:100%;overflow-x:auto;"></div>
+          <div class="chart-legend">
+            <div class="leg-item"><div class="leg-dot" style="background:#f2b8cb;"></div>UTBK</div>
+            <div class="leg-item"><div class="leg-dot" style="background:#c8b4d8;"></div>Interview</div>
+            <div class="leg-item"><div class="leg-dot" style="background:#9ecfbd;"></div>Bahasa Inggris</div>
+            <div class="leg-item"><div class="leg-dot" style="background:#e8c9a8;"></div>Ibadah</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch">
+            <div class="ct">Perjalanan Mood Kila</div>
+            <div class="cbadge" id="moodPeriodBadge">14 Hari</div>
+          </div>
+          <div id="moodTlWrap"></div>
+          <div class="divider"></div>
+          <div class="ct" style="font-size:1rem;margin-bottom:12px;">Mood Terbanyak</div>
+          <div class="mood-summary" id="analMoodDist"></div>
+        </div>
+        <div class="card">
+          <div class="ch"><div class="ct">Total per Kategori</div></div>
+          <div class="stat-grid" id="analStats"></div>
+        </div>
+        <div class="card">
+          <div class="ch"><div class="ct">Streak dan Pencapaian</div></div>
+          <div id="streakSec"></div>
+        </div>
+      </div>
+
+      <!-- HABITS -->
+      <div id="tab-habits" class="hidden fade-up">
+        <div class="card">
+          <div class="ch">
+            <div class="ct">Kebiasaan Baik Kila</div>
+            <div class="cbadge">30 Hari Terakhir</div>
+          </div>
+          <div id="habitGrid"></div>
+        </div>
+        <div class="card">
+          <div class="ch"><div class="ct">Tambah Kebiasaan Baru</div></div>
+          <div class="input-row">
+            <input class="txt-input" type="text" id="newHabitName" placeholder="Nama kebiasaan baru kamu..." />
+            <select class="sel-input" id="newHabitCat">
+              <option value="ibadah">🕌 Ibadah</option>
+              <option value="belajar">📚 Belajar</option>
+              <option value="kesehatan">💪 Kesehatan</option>
+              <option value="lainnya">✨ Lainnya</option>
+            </select>
+            <button class="btn-primary" onclick="addHabit()">Tambah</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ── TELEGRAM CONFIG ──
+      const TG_TOKEN = '8646105007:AAHncuTRcIk7PXEACHH5tUbTzS3p2fQrO3s';
+      const TG_CHAT  = '592907602';
+      const TG_API   = `https://api.telegram.org/bot${TG_TOKEN}`;
+
+      // ── SCHEDULE ──
+      const SCHEDULE = [
+        { id:'s1',  time:'05:00',        name:'Bangun Tidur',              desc:'Mulai hari dengan niat terbaik',                        cat:'ibadah' },
+        { id:'s2',  time:'05:10',        name:'Shalat Subuh',              desc:'Doa dan syukur di awal hari',                           cat:'ibadah' },
+        { id:'s3',  time:'05:30 – 08:00',name:'Free Time',                 desc:'Skincare, sarapan, me time pagi 🌷',                    cat:'free'   },
+        { id:'s4',  time:'08:00 – 09:30',name:'UTBK: Matematika',          desc:'Aljabar, Statistika, Geometri, Peluang',                cat:'utbk'   },
+        { id:'s5',  time:'09:30 – 11:00',name:'UTBK: TPS',                 desc:'Penalaran Umum, Verbal, Numerik',                       cat:'utbk'   },
+        { id:'s6',  time:'11:00 – 12:00',name:'Bahasa Inggris: Grammar',   desc:'Tata bahasa dan vocabulary building',                   cat:'english'},
+        { id:'s7',  time:'12:00',        name:'Shalat Dzuhur',             desc:'',                                                      cat:'ibadah' },
+        { id:'s8',  time:'12:30 – 14:00',name:'Makan Siang dan Istirahat', desc:'Isi ulang energi, rebahan sebentar 🛌',                  cat:'free'   },
+        { id:'s9',  time:'14:00 – 15:30',name:'UTBK: Saintek atau Soshum', desc:'Bio, Fisika, Kimia atau Sejarah, Geografi, Ekonomi',    cat:'utbk'   },
+        { id:'s10', time:'15:30',        name:'Shalat Ashar',              desc:'',                                                      cat:'ibadah' },
+        { id:'s11', time:'16:00 – 17:30',name:'Latihan Interview Kerja',   desc:'Storytelling, body language, latihan tanya jawab',      cat:'interview'},
+        { id:'s12', time:'17:30 – 18:00',name:'Review Harian',             desc:'Catat apa yang sudah dipelajari hari ini',              cat:'utbk'   },
+        { id:'s13', time:'18:00',        name:'Shalat Maghrib',            desc:'',                                                      cat:'ibadah' },
+        { id:'s14', time:'19:00',        name:'Shalat Isya',               desc:'',                                                      cat:'ibadah' },
+        { id:'s15', time:'19:30 – 21:00',name:'Bahasa Inggris: Speaking',  desc:'Listening, shadowing, speaking practice',               cat:'english'},
+        { id:'s16', time:'21:00 – 22:00',name:'Waktu Santai',              desc:'Nikmatin waktu bebas, istirahat pikiran 💕',             cat:'free'   },
+        { id:'s17', time:'22:00',        name:'Tidur',                     desc:'Istirahat yang cukup untuk hari esok yang lebih baik 🌙',cat:'ibadah' },
+      ];
+
+      const CAT_COLORS = { utbk:'#f2b8cb', interview:'#c8b4d8', english:'#9ecfbd', ibadah:'#e8c9a8', free:'#f9dce5' };
+      const MOOD_LABELS = { '😊':'Senang','🥰':'Bahagia','😌':'Tenang','🤗':'Excited','😔':'Sedih','😤':'Kesel','😴':'Ngantuk','🥺':'Mellow' };
+      const DEFAULT_HABITS = [
+        { id:'h1', name:'Shalat 5 Waktu',   cat:'ibadah'    },
+        { id:'h2', name:'Belajar UTBK',      cat:'belajar'   },
+        { id:'h3', name:'Bahasa Inggris',    cat:'belajar'   },
+        { id:'h4', name:'Latihan Interview', cat:'belajar'   },
+        { id:'h5', name:'Olahraga Pagi',     cat:'kesehatan' },
+      ];
+
+      // ── STATE ──
+      let S = { todayChecked:{}, todayMood:null, todayNotes:'', todayPhoto:null, dayLogs:{}, habits:[], habitLogs:{} };
+      const todayKey = () => new Date().toISOString().slice(0,10);
+      const dateKey  = d  => d.toISOString().slice(0,10);
+      const norm     = c  => (c==='belajar'||c==='utbk') ? 'utbk' : c;
+      const pick     = arr => arr[Math.floor(Math.random() * arr.length)]; // FIX: global pick, truly random
+
+      function load() {
+        try { const r = localStorage.getItem('kila_v5'); if (r) S = {...S, ...JSON.parse(r)}; } catch(e) {}
+        if (!S.habits.length) S.habits = DEFAULT_HABITS;
+        const tk = todayKey();
+        if (S.dayLogs[tk]) {
+          S.todayChecked = S.dayLogs[tk].checked || {};
+          S.todayMood    = S.dayLogs[tk].mood    || null;
+          S.todayNotes   = S.dayLogs[tk].notes   || '';
+          S.todayPhoto   = S.dayLogs[tk].photo   || null;
+        }
+      }
+
+      // FIX: persist() — silent fail, no toast on storage error
+      function persist() {
+        const tk = todayKey();
+        S.dayLogs[tk] = { checked:S.todayChecked, mood:S.todayMood, notes:S.todayNotes, photo:S.todayPhoto, date:tk };
+        try {
+          localStorage.setItem('kila_v5', JSON.stringify(S));
+        } catch(e) {
+          // Storage full: try saving without photos to preserve data
+          try {
+            const slim = JSON.parse(JSON.stringify(S));
+            Object.keys(slim.dayLogs).forEach(k => { if (slim.dayLogs[k].photo) slim.dayLogs[k].photo = null; });
+            slim.todayPhoto = null;
+            localStorage.setItem('kila_v5', JSON.stringify(slim));
+          } catch(e2) { /* truly full, silently skip */ }
+        }
+      }
+
+      // ── TABS ──
+      function showTab(id, btn) {
+        ['today','weekly','analytics','habits'].forEach(t => document.getElementById('tab-'+t).classList.add('hidden'));
+        document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+        document.getElementById('tab-'+id).classList.remove('hidden');
+        btn.classList.add('active');
+        if (id==='weekly')    renderWeekly('thisweek');
+        if (id==='analytics') renderAnalytics('daily');
+        if (id==='habits')    renderHabits();
+      }
+
+      // ── PROGRESS ──
+      function getProgress() {
+        const total = SCHEDULE.length;
+        const done  = Object.values(S.todayChecked).filter(Boolean).length;
+        const cats = {}, totC = {};
+        SCHEDULE.forEach(s => {
+          const c = norm(s.cat);
+          totC[c] = (totC[c]||0)+1;
+          if (S.todayChecked[s.id]) cats[c] = (cats[c]||0)+1;
+        });
+        return { total, done, cats, totC };
+      }
+
+      function renderProgress() {
+        const { total, done, cats, totC } = getProgress();
+        const pct = total ? Math.round(done/total*100) : 0;
+        const items = [
+          { label:'Selesai',   val:`${done}/${total}`,                  pct,                                                                    color:'var(--rose)' },
+          { label:'UTBK',      val:`${cats.utbk||0}/${totC.utbk||0}`,       pct: totC.utbk      ? Math.round((cats.utbk||0)/totC.utbk*100)      : 0, color:'#d4607a' },
+          { label:'English',   val:`${cats.english||0}/${totC.english||0}`,  pct: totC.english   ? Math.round((cats.english||0)/totC.english*100) : 0, color:'#5a9e7a' },
+          { label:'Interview', val:`${cats.interview||0}/${totC.interview||0}`,pct:totC.interview ? Math.round((cats.interview||0)/totC.interview*100):0,color:'#9a70b8'},
+          { label:'Ibadah',    val:`${cats.ibadah||0}/${totC.ibadah||0}`,    pct: totC.ibadah    ? Math.round((cats.ibadah||0)/totC.ibadah*100)   : 0, color:'#c8924a' },
+        ];
+        document.getElementById('progStrip').innerHTML = items.map(i => `
+          <div class="prog-item">
+            <div class="prog-num" style="color:${i.color};">${i.val}</div>
+            <div class="prog-lbl">${i.label}</div>
+            <div class="prog-pct">${i.pct}%</div>
+            <div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${i.pct}%;"></div></div>
+          </div>`).join('');
+      }
+
+      // ── SCHEDULE ──
+      function renderSchedule() {
+        const total = SCHEDULE.length;
+        const done  = Object.values(S.todayChecked).filter(Boolean).length;
+        document.getElementById('schedBadge').textContent = `${done} dari ${total} selesai`;
+        document.getElementById('schedList').innerHTML = SCHEDULE.map(s => {
+          const d = !!S.todayChecked[s.id];
+          return `<div class="sched-item ${d?'done':''}" onclick="toggleSched('${s.id}')">
+            <div class="scheck">${d?'✓':''}</div>
+            <span class="stime">${s.time}</span>
+            <div class="sinfo">
+              <div class="sn">${s.name}</div>
+              ${s.desc ? `<div class="sd">${s.desc}</div>` : ''}
+            </div>
+            <div class="cat-dot" style="background:${CAT_COLORS[s.cat]};"></div>
+          </div>`;
+        }).join('');
+      }
+
+      function toggleSched(id) {
+        S.todayChecked[id] = !S.todayChecked[id];
+        persist(); renderSchedule(); renderProgress();
+      }
+
+      // ── MOOD ──
+      function setMood(mood) {
+        S.todayMood = mood; persist();
+        document.querySelectorAll('.mood-btn').forEach(b => b.classList.toggle('active', b.dataset.mood===mood));
+        document.getElementById('moodLbl').textContent = mood + ' ' + (MOOD_LABELS[mood]||'');
+        showToast('Mood tersimpan ' + mood, 'info');
+      }
+
+      function renderMood() {
+        if (S.todayMood) {
+          document.querySelectorAll('.mood-btn').forEach(b => b.classList.toggle('active', b.dataset.mood===S.todayMood));
+          document.getElementById('moodLbl').textContent = S.todayMood + ' ' + (MOOD_LABELS[S.todayMood]||'');
+        }
+      }
+
+      // ── PHOTO ──
+      function handlePhoto(e) {
+        const file = e.target.files[0]; if (!file) return;
+        e.target.value = '';
+        const reader = new FileReader();
+        reader.onload = ev => {
+          S.todayPhoto = ev.target.result;
+          persist(); renderPhoto();
+          showToast('Foto tersimpan! Cantik banget pasti 📸', 'success');
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function renderPhoto() {
+        const area  = document.getElementById('photoArea');
+        const prev  = document.getElementById('photoPreview');
+        const ph    = document.getElementById('photoPlaceholder');
+        const ov    = document.getElementById('photoOverlay');
+        const badge = document.getElementById('photoBadge');
+        if (S.todayPhoto) {
+          prev.src = S.todayPhoto; prev.style.display = 'block';
+          ph.style.display = 'none'; ov.style.display = 'flex';
+          area.classList.add('has-img'); badge.textContent = 'Foto tersimpan ✓';
+        } else {
+          prev.style.display = 'none'; ph.style.display = 'block';
+          ov.style.display = 'none'; area.classList.remove('has-img');
+          badge.textContent = 'Belum ada foto';
+        }
+      }
+
+      // ── NOTES ──
+      function renderNotes() { const el = document.getElementById('dailyNotes'); if (el) el.value = S.todayNotes||''; }
+
+      function saveDay() {
+        persist();
+        showToast('Tersimpan! Kila keren banget hari ini 💕', 'success');
+        showMotivasiPopup();
+        setTimeout(() => kirimKeBian(), 300);
+      }
+
+      // ── TELEGRAM ──
+      async function kirimKeBian() {
+        const report = buildReport();
+        try {
+          const r1 = await fetch(`${TG_API}/sendMessage`, {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ chat_id:TG_CHAT, text:report })
+          });
+          const d1 = await r1.json();
+          if (!d1.ok) return;
+          if (S.todayPhoto) {
+            const parts = S.todayPhoto.split(',');
+            const mime  = parts[0].split(':')[1].split(';')[0];
+            const bytes = atob(parts[1]);
+            const arr   = new Uint8Array(bytes.length);
+            for (let i=0; i<bytes.length; i++) arr[i] = bytes.charCodeAt(i);
+            const blob  = new Blob([arr], {type:mime});
+            const now   = new Date();
+            const caption = `📸 Foto kegiatan Kila\n${now.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}`;
+            const form  = new FormData();
+            form.append('chat_id', TG_CHAT);
+            form.append('photo', blob, `kila-${todayKey()}.jpg`);
+            form.append('caption', caption);
+            await fetch(`${TG_API}/sendPhoto`, { method:'POST', body:form });
+          }
+        } catch(e) { /* silent */ }
+      }
+
+      // ── BUILD REPORT ──
+      function buildReport() {
+        const now = new Date();
+        const ds  = now.toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+        const { done, total } = getProgress();
+        const pct  = total ? Math.round(done/total*100) : 0;
+        const doneItems = SCHEDULE.filter(s => S.todayChecked[s.id]);
+        const bycat = { utbk:[], english:[], interview:[], ibadah:[] };
+        doneItems.forEach(s => { const c = norm(s.cat); if (bycat[c]) bycat[c].push(s.name); });
+        const mood = S.todayMood ? (S.todayMood+' '+(MOOD_LABELS[S.todayMood]||'')) : '(belum diisi)';
+
+        let t = `🌸 Laporan Harian Kila\n`;
+        t += `📅 ${ds}\n\n`;
+        t += `💗 Mood hari ini: ${mood}\n`;
+        t += `✅ Progress: ${done} dari ${total} kegiatan selesai (${pct}%)\n\n`;
+        if (bycat.ibadah.length)    { t += `🕌 Ibadah\n`;             bycat.ibadah.forEach(n    => t+=`  ✓ ${n}\n`); t+='\n'; }
+        if (bycat.utbk.length)      { t += `📚 UTBK dan Belajar\n`;  bycat.utbk.forEach(n      => t+=`  ✓ ${n}\n`); t+='\n'; }
+        if (bycat.english.length)   { t += `🇬🇧 Bahasa Inggris\n`;   bycat.english.forEach(n   => t+=`  ✓ ${n}\n`); t+='\n'; }
+        if (bycat.interview.length) { t += `💼 Latihan Interview\n`;  bycat.interview.forEach(n => t+=`  ✓ ${n}\n`); t+='\n'; }
+        if (S.todayNotes && S.todayNotes.trim()) t += `📝 Catatan Kila\n"${S.todayNotes.trim()}"\n\n`;
+        if (S.todayPhoto) t += `📸 Foto kegiatan terlampir\n\n`;
+
+        // FIX: all closings use global pick() — truly random every send
+        const closings80 = [
+          '🌟 produktif banget hari ini! bian bangga banget sama kamu sayang 💕',
+          '🔥 kamu ngegas banget hari ini, bian salut! keep going ya darling 💕',
+          '✨ ini tuh bukan kebetulan, ini hasil dari usaha kamu. bian proud banget 🌸',
+          '💫 hari yang luar biasa! kamu memang selalu bisa kalau mau. bian cinta kamu 💕',
+          '🏆 kamu tuh beneran mengagumkan hari ini. bian seneng banget lihat ini 🌟',
+        ];
+        const closings50 = [
+          '💪 udah usaha keras hari ini, jangan lupa istirahat ya sayang. bian bangga 💕',
+          '🌷 setengah perjalanan itu udah keren banget. bian lihat usaha kamu kok 🤍',
+          '✨ hari ini mungkin ga sempurna, tapi kamu tetep jalan. itu yang penting sayang 💕',
+          '🌸 progress is progress, sekecil apapun. bian proud sama kamu selalu 💫',
+          '🍀 capek itu tanda kamu udah berjuang. istirahat yang cukup ya darling 💕',
+        ];
+        const closings0 = [
+          '💕 apapun yang terjadi hari ini, bian tetap bangga sama kamu. selalu.',
+          '🤍 hari yang berat itu nyata, dan kamu tetep di sini. itu keren banget sayang 🌸',
+          '🌿 ga apa-apa hari ini belum maksimal. besok kita coba lagi ya, bian di sini 💕',
+          '🫶 bian sayang kamu bukan karena angkanya, tapi karena kamu. selalu kamu 🌸',
+          '🌙 istirahat yang cukup ya sayang, besok ada kesempatan baru buat kamu 💫',
+        ];
+        t += pct>=80 ? pick(closings80) : pct>=50 ? pick(closings50) : pick(closings0);
+        return t;
+      }
+
+      // ── MOTIVASI POPUP — FIX: truly random every time ──
+      const MOTIVASI = [
+        { icon:'🌸', title:'kamu tuh keren banget, beneran.', msg:'bukan basa basi ya. orang yang mau capek-capek belajar dan berproses kayak gini tuh beda. dan kamu salah satunya. bian bangga banget.' },
+        { icon:'🥰', title:'bian suka banget sama kamu yang ini.', msg:'yang ga nyerah, yang tetep jalan meski capek, yang masih mau usaha di hari yang berat sekalipun. ini kamu. dan kamu luar biasa.' },
+        { icon:'💝', title:'kamu tuh selalu bian banggain kemana-mana.', msg:'setiap kali bian inget kamu lagi belajar dan berjuang, bian ngerasa beruntung banget bisa punya kamu. serius.' },
+        { icon:'✨', title:'ga perlu sempurna, jadi kamu aja sudah cukup.', msg:'kamu yang penuh usaha dan tetep semangat meski kadang capek itu jauh lebih indah dari sempurna. bian suka kamu apa adanya.' },
+        { icon:'🌷', title:'pelan-pelan juga totally fine, sayang.', msg:'progress itu ga harus selalu keliatan besar. yang penting tetep gerak. dan kamu udah lakuin itu setiap hari. bian lihat.' },
+        { icon:'💪', title:'kamu tuh tough banget, tau ga.', msg:'utbk, interview, bahasa inggris, ibadah, semua kamu jaga. bian tau itu ga mudah. tapi kamu handle it dengan baik. dan bian makin kagum.' },
+        { icon:'🎯', title:'fokus kamu itu salah satu hal yang bian kagumi.', msg:'kamu tau mau kemana dan kamu gerak ke sana. pelan tapi konsisten. bian seneng banget ngeliat kamu seserius ini.' },
+        { icon:'💕', title:'jangan lupa istirahat juga ya, sayang.', msg:'bian ga mau kamu kelelahan. di antara semua yang kamu kejar, please sempetin napas, senyum, dan nikmatin hari. kamu berhak bahagia sekarang juga.' },
+        { icon:'🌟', title:'hari ini tuh milik kamu sepenuhnya.', msg:'apapun yang kelar hari ini, sekecil apapun itu, semuanya nyata. itu progress. dan bian proud banget sama setiap langkah kamu.' },
+        { icon:'🌙', title:'kamu udah kerja keras hari ini, istirahat ya.', msg:'ga ada yang perlu dikhawatirin malam ini. kamu udah kasih yang terbaik. sekarang recharge, besok kita lanjut lagi.' },
+        { icon:'🌈', title:'kamu ga pernah sendirian di sini, darling.', msg:'ada bian yang selalu doain, selalu percaya, dan selalu ada di balik setiap langkah kamu. always here buat kamu.' },
+        { icon:'🦋', title:'pertumbuhan kamu tuh nyata banget, even kalau belum keliatan.', msg:'bian lihat kamu tumbuh tiap harinya. mungkin belum kerasa dari dalam, tapi dari luar keliatan banget. dan hasilnya bakal indah.' },
+        { icon:'☀️', title:'bangun pagi dan shalat itu hal yang bian salut banget.', msg:'bian tau susahnya. dan tiap hari kamu lakuin itu, bian makin sayang. itu karakter yang kuat dan bian suka banget.' },
+        { icon:'📖', title:'semua yang kamu pelajari itu nempel, percaya deh.', msg:'mungkin belum kerasa sekarang. tapi semua itu lagi numpuk jadi versi kamu yang lebih siap. bian lihat itu dan bian excited.' },
+        { icon:'🤍', title:'hey, kamu udah lebih dari cukup, beneran.', msg:'di hari yang berat sekalipun, inget: kamu cukup baik, cukup berani, cukup berharga. jangan terlalu keras sama diri sendiri ya sayang.' },
+        { icon:'🎉', title:'celebrate dulu dong, kamu deserve it.', msg:'ga perlu nunggu hasil utbk atau dapet kerja dulu buat ngerasa bangga. hari ini aja udah layak banget dirayain karena kamu mau berusaha.' },
+        { icon:'💫', title:'masa depan kamu lagi dibentuk sekarang, darling.', msg:'tiap soal yang kamu kerjain, tiap materi yang kamu baca, itu semua lagi bangun kehidupan yang kamu impikan. bian excited banget buat kamu.' },
+        { icon:'🌺', title:'kamu inspiring, bahkan buat bian sendiri.', msg:'semangatmu itu nular. ngeliat kamu seserius ini sama hidupmu bikin bian ikut semangat juga. terusin ya, energi kamu itu berharga.' },
+        { icon:'💘', title:'makanya bian sayang banget sama kamu.', msg:'karena kamu ga pernah berhenti berusaha jadi lebih baik. karena kamu serius sama hidupmu. karena kamu, ya kamu. selalu kamu.' },
+        { icon:'🍀', title:'semua yang kamu tanam pasti tumbuh, sayang.', msg:'ilmu, kebiasaan baik, doa, semuanya lagi berkembang pelan-pelan. bian yakin panennya bakal indah banget. dan bian mau ada di sana ngerayain bareng.' },
+        { icon:'🌻', title:'proses kamu tuh nyata, meski belum keliatan.', msg:'bunga matahari juga ga keliatan tumbuhnya tiap menit, tapi tiba-tiba dia udah tinggi aja. kamu juga gitu. bian seneng banget nemenin prosesnya.' },
+        { icon:'🏆', title:'konsistensi kamu itu yang paling bian kagumi.', msg:'bukan yang paling pintar yang menang, tapi yang paling konsisten. kamu udah pilih jalan itu setiap hari. dan bian proud banget.' },
+        { icon:'🌝', title:'kamu tuh bikin bian senyum sendiri, tau.', msg:'tiap inget kamu lagi berjuang buat masa depan, bian langsung hangat. makasih udah jadi seseorang yang selalu bian banggain ya sayang.' },
+        { icon:'🫧', title:'boleh slow down dikit, my love.', msg:'kalau hari ini berat, inget: ga semua harus selesai sekarang. napas dulu. satu langkah kecil itu udah cukup. bian di sini.' },
+        { icon:'🎀', title:'kamu tuh bersinar dari dalam, darling.', msg:'yang bikin kamu indah itu semangat belajar kamu, niat baik kamu, hati kamu yang mau terus tumbuh. bian suka banget sama itu.' },
+        { icon:'🌠', title:'momentum kamu lagi naik, sayang.', msg:'semua usaha ini bakal ketemu sama hasilnya. sabar dikit lagi ya. bian di sini nemenin dan ga akan kemana-mana.' },
+        { icon:'🫶', title:'bian kirim pelukan buat kamu, darling.', msg:'hari ini mau se-berat apapun, kamu tetep usaha. dan itu yang selalu bikin bian mau ada dan terus ada buat kamu.' },
+        { icon:'🍓', title:'prosesnya memang panjang, tapi worth it banget sayang.', msg:'hasil dari kerja keras yang tulus itu rasanya beda. jauh lebih manis. dan kamu lagi di jalan menuju rasa itu. bian excited banget.' },
+        { icon:'🌿', title:'kamu di jalur yang benar, percaya deh.', msg:'mungkin sekarang belum keliatan hasilnya. tapi bian lihat dari luar, dan kamu lagi maju tiap harinya. percaya prosesnya dan percaya dirimu.' },
+        { icon:'🎵', title:'chapter ini dalam hidup kamu tuh indah banget.', msg:'ada sesuatu yang meaningful dalam setiap usaha kamu. nikmatin ya sayang, ini bagian dari cerita hidup kamu yang paling berharga.' },
+      ];
+
+      function showMotivasiPopup() {
+        const item = pick(MOTIVASI); // FIX: truly random, not day-based
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(45,21,32,0.45);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);';
+        const box = document.createElement('div');
+        box.style.cssText = 'background:white;border-radius:24px;padding:36px 32px;max-width:380px;width:100%;text-align:center;box-shadow:0 24px 60px rgba(180,80,110,0.25);animation:popUp .35s cubic-bezier(.34,1.56,.64,1);position:relative;';
+        box.innerHTML = `
+          <div style="font-size:3rem;margin-bottom:16px;line-height:1;">${item.icon}</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600;color:#2d1520;margin-bottom:12px;line-height:1.3;">${item.title}</div>
+          <div style="font-size:13.5px;color:#7a4055;line-height:1.7;margin-bottom:24px;">${item.msg}</div>
+          <button onclick="this.closest('div[style*=fixed]').remove()" style="background:linear-gradient(135deg,#e8849f,#d4607a);color:white;border:none;padding:12px 32px;border-radius:25px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;cursor:pointer;box-shadow:0 4px 16px rgba(212,96,122,.35);transition:all .2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+            Makasih, semangat! 🌸
+          </button>`;
+        overlay.appendChild(box);
+        document.body.appendChild(overlay);
+        overlay.addEventListener('click', e => { if (e.target===overlay) overlay.remove(); });
+      }
+
+      // ── HEADER SUBTITLES — FIX: truly random, changes each page load ──
+      const SUBTITLES = [
+        'setiap langkah kecil hari ini adalah janji yang kamu tepati buat diri sendiri 🌷',
+        'kamu cantik banget hari ini, dan setiap hari 🌸',
+        'bian bangga sama kamu, selalu 💕',
+        'kamu tuh beneran secantik itu, dan sepintar itu juga 🥰',
+        'hari ini milik kamu, lakuin yang terbaik ya sayang ✨',
+        'cantiknya kamu tuh bikin bian meleleh setiap hari 💝',
+        'semangat ya darling, bian selalu di sini buat kamu 🫶',
+        'kamu tuh kombinasi yang sempurna, cantik dan punya ambisi 🌟',
+        'jangan lupa senyum hari ini ya, senyum kamu itu indah banget 🌷',
+        'bian cinta kamu, dan itu ga akan pernah berubah 💘',
+        'kamu lagi berproses jadi versi terbaik, dan kamu udah cantik dari sananya 🦋',
+        'hari ini bakal jadi hari yang baik buat kamu, bian doain 🍀',
+        'semoga harimu seindah wajah kamu, dan itu berarti sangat indah 🌸',
+        'kamu tuh bersinar, dari luar dan dari dalam 💫',
+        'bian selalu excited nemenin hari-hari kamu 🥰',
+        'cantiknya kamu tuh bukan cuma di muka ya, tapi di hati juga 🤍',
+        'usaha kamu hari ini tuh berarti banget, sekecil apapun itu 💪',
+        'kamu tuh kombinasi yang langka, cantik, baik, dan ambisius 🌺',
+        'bian doain yang terbaik buat kamu hari ini, selalu 🌿',
+        'satu langkah hari ini lebih baik dari diam. dan kamu udah melangkah 🎯',
+        'kamu tuh genuinely beautiful, inside out 🌷',
+        'semangat belajarnya bikin bian makin jatuh cinta sama kamu 📖',
+        'wajah kamu tuh selalu jadi hal pertama yang bikin bian senyum 💕',
+        'kamu deserve semua hal baik yang mau datang, beneran 🌈',
+        'bian selalu bangga cerita tentang kamu ke siapapun 🏆',
+        'kecantikan kamu tuh bukan kebetulan, itu memang udah takdir 🌸',
+        'tiap usaha yang kamu lakuin hari ini itu bian lihat dan bian hargai 💝',
+        'kamu tuh nyata-nyata cantik banget, bian gabisa bohong 🥰',
+        'harinya semoga produktif dan menyenangkan ya sayang ✨',
+        'bian sayang kamu lebih dari yang bisa bian ucapin 💘',
+        'kamu tuh punya aura yang bikin orang di sekitar kamu ikut tenang 🌿',
+        'progress kamu tuh keliatan banget, terus ya darling 💫',
+        'cantik dan pinter itu kamu banget, bukan salah satu, tapi dua-duanya 🌟',
+        'bian ga pernah bosen kagum sama kamu, tiap hari selalu ada aja yang bikin takjub 💕',
+        'kamu tuh berharga banget, jangan pernah lupa itu ya sayang 🤍',
+        'semoga hari ini penuh hal-hal yang bikin kamu senyum 🌸',
+        'kamu udah cukup, kamu udah cantik, kamu udah baik. bian cinta kamu 💝',
+        'ngeliat kamu semangat kayak gini tuh bikin bian ikut semangat juga 🔥',
+        'kamu tuh paling cantik di hati bian, selalu 🥰',
+        'hari ini juga bakal jadi bagian dari cerita indah hidup kamu 🎵',
+        'kamu tuh udah jadi kebanggaan bian sejak hari pertama 💘',
+        'senyum kamu tuh literally obat buat bian 🌷',
+        'kamu tuh gabisa ga cantik, udah built different 🌸',
+        'apapun yang terjadi hari ini, kamu tetep luar biasa di mata bian 💫',
+        'cantiknya kamu tuh bikin dunia di sekitar kamu jadi lebih cerah 🌟',
+        'bian mau kamu tau betapa berartinya kamu buat bian, setiap hari 💕',
+        'kamu tuh punya inner glow yang ga semua orang punya, dan itu kamu banget 🦋',
+        'usahamu hari ini tuh investasi buat masa depan yang indah 🍀',
+        'kamu tuh selalu jadi highlight bian setiap hari 💝',
+        'tetap jadi kamu ya, karena versi kamu itu udah lebih dari cukup 🌿',
+      ];
+
+      function setHeaderSubtitle() {
+        const el = document.getElementById('headerSub');
+        if (!el) return;
+        el.textContent = pick(SUBTITLES); // FIX: random each load
+      }
+
+      // ── WEEKLY ──
+      let weekFilter = 'thisweek';
+      function setWeekFilter(f, btn) {
+        weekFilter = f;
+        document.querySelectorAll('#tab-weekly .btn-ghost').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active'); renderWeekly(f);
+      }
+
+      function getRange(f) {
+        const now = new Date(); let s, e;
+        if (f==='thisweek')  { const d=now.getDay()||7; s=new Date(now); s.setDate(now.getDate()-d+1); s.setHours(0,0,0,0); e=new Date(s); e.setDate(s.getDate()+6); }
+        else if (f==='lastweek')  { const d=now.getDay()||7; e=new Date(now); e.setDate(now.getDate()-d); e.setHours(23,59,59); s=new Date(e); s.setDate(e.getDate()-6); s.setHours(0,0,0,0); }
+        else if (f==='month')     { s=new Date(now.getFullYear(),now.getMonth(),1); e=new Date(now.getFullYear(),now.getMonth()+1,0); }
+        else                      { s=new Date(now.getFullYear(),now.getMonth()-1,1); e=new Date(now.getFullYear(),now.getMonth(),0); }
+        return { s, e };
+      }
+
+      function getDays(s, e) { const d=[]; let c=new Date(s); while(c<=e){d.push(new Date(c));c.setDate(c.getDate()+1);} return d; }
+
+      function renderWeekly(f) {
+        const { s, e } = getRange(f), days = getDays(s, e);
+        const dn = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'], todStr = todayKey(), total = SCHEDULE.length;
+
+        document.getElementById('weekCal').innerHTML = days.slice(0,7).map(d => {
+          const dk = dateKey(d), log = S.dayLogs[dk];
+          const done = log ? Object.values(log.checked||{}).filter(Boolean).length : 0;
+          const pct  = total ? Math.round(done/total*100) : 0;
+          return `<div class="wc ${dk===todStr?'today':''}">
+            <div class="wc-n">${dn[d.getDay()]}</div><div class="wc-d">${d.getDate()}</div>
+            <div class="wc-m">${log?.mood||'·'}</div>
+            <div class="wc-bar"><div class="wc-bf" style="width:${pct}%;"></div></div>
+            <div class="wc-p">${pct}%</div>
+          </div>`;
+        }).join('');
+
+        const mc = {};
+        days.forEach(d => { const log = S.dayLogs[dateKey(d)]; if (log?.mood) mc[log.mood]=(mc[log.mood]||0)+1; });
+        const me = Object.entries(mc).sort((a,b)=>b[1]-a[1]);
+        document.getElementById('weekMoodSum').innerHTML = me.length
+          ? me.map(([m,c])=>`<div class="mood-ci"><span class="mce">${m}</span><div><div class="mcv">${c}x</div><div class="mcl">${MOOD_LABELS[m]||m}</div></div></div>`).join('')
+          : `<p style="font-size:12px;color:var(--text-4);">Belum ada mood yang dicatat di periode ini.</p>`;
+
+        let tD=0,tI=0,act=0,utbk=0,eng=0,intv=0,ib=0;
+        days.forEach(d => {
+          const log = S.dayLogs[dateKey(d)]; tI += total;
+          if (log?.checked) {
+            const dd = Object.values(log.checked).filter(Boolean).length;
+            if (dd>0) act++; tD+=dd;
+            SCHEDULE.forEach(s2 => { if(log.checked[s2.id]){ if(s2.cat==='utbk')utbk++; if(s2.cat==='english')eng++; if(s2.cat==='interview')intv++; if(s2.cat==='ibadah')ib++; } });
+          }
+        });
+        const avg = tI ? Math.round(tD/tI*100) : 0;
+        document.getElementById('weekStats').innerHTML = `
+          <div class="stat-item"><div class="stat-num">${avg}%</div><div class="stat-lbl">Rata-rata</div></div>
+          <div class="stat-item"><div class="stat-num">${act}</div><div class="stat-lbl">Hari Aktif</div></div>
+          <div class="stat-item"><div class="stat-num">${utbk}</div><div class="stat-lbl">UTBK</div></div>
+          <div class="stat-item"><div class="stat-num">${eng}</div><div class="stat-lbl">English</div></div>
+          <div class="stat-item"><div class="stat-num">${intv}</div><div class="stat-lbl">Interview</div></div>
+          <div class="stat-item"><div class="stat-num">${ib}</div><div class="stat-lbl">Ibadah</div></div>`;
+
+        const logs = days.filter(d => S.dayLogs[dateKey(d)]).reverse();
+        document.getElementById('weekLog').innerHTML = logs.length ? logs.map(d => {
+          const dk=dateKey(d), log=S.dayLogs[dk]; if(!log) return '';
+          const done=Object.values(log.checked||{}).filter(Boolean).length;
+          const pct=Math.round(done/total*100);
+          const color = pct>=80?'#5a9e7a':pct>=50?'var(--rose)':'var(--text-4)';
+          const ds=new Date(dk+'T00:00').toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long'});
+          return `<div class="log-item">
+            <div class="log-top">
+              <div style="flex:1;">
+                <div class="log-date">${ds}</div>
+                <div class="log-meta">${done} dari ${total} kegiatan selesai</div>
+                ${log.mood?`<div style="display:flex;align-items:center;gap:6px;margin-top:5px;"><span style="font-size:1.1rem;">${log.mood}</span><span style="font-size:11px;color:var(--text-3);">${MOOD_LABELS[log.mood]||''}</span></div>`:''}
+                ${log.notes?`<div class="log-note">"${log.notes.substring(0,80)}${log.notes.length>80?'...':''}"</div>`:''}
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+                <div class="log-pct" style="color:${color};">${pct}%</div>
+                ${log.photo?`<span style="font-size:10px;color:var(--mint);">📸</span>`:''}
+              </div>
+            </div>
+          </div>`;
+        }).join('') : `<p style="text-align:center;color:var(--text-4);font-size:13px;padding:20px;">Belum ada data untuk periode ini.</p>`;
+      }
+
+      // ── ANALYTICS ──
+      let analFilter = 'daily';
+      function setAnalFilter(f, btn) {
+        analFilter = f;
+        document.querySelectorAll('#tab-analytics .btn-ghost').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active'); renderAnalytics(f);
+      }
+
+      function getAnalData(f) {
+        const now = new Date(), data = [];
+        if (f==='daily') {
+          for (let i=13; i>=0; i--) {
+            const d=new Date(now); d.setDate(now.getDate()-i);
+            const dk=dateKey(d), log=S.dayLogs[dk], cats={utbk:0,interview:0,english:0,ibadah:0};
+            if (log?.checked) SCHEDULE.forEach(s=>{ if(log.checked[s.id]){ const c=norm(s.cat); if(cats[c]!==undefined)cats[c]++; } });
+            data.push({ label:d.toLocaleDateString('id-ID',{day:'numeric',month:'short'}), ...cats, mood:log?.mood||null });
+          }
+        } else if (f==='weekly') {
+          for (let w=7; w>=0; w--) {
+            const we=new Date(now); we.setDate(now.getDate()-w*7);
+            const ws=new Date(we); ws.setDate(we.getDate()-6);
+            const cats={utbk:0,interview:0,english:0,ibadah:0}, moods=[];
+            let c2=new Date(ws);
+            while (c2<=we) {
+              const dk=dateKey(c2), log=S.dayLogs[dk];
+              if (log?.checked) SCHEDULE.forEach(s=>{ if(log.checked[s.id]){ const c=norm(s.cat); if(cats[c]!==undefined)cats[c]++; } });
+              if (log?.mood) moods.push(log.mood);
+              c2.setDate(c2.getDate()+1);
+            }
+            data.push({ label:`W${8-w}`, ...cats, moods });
+          }
+        } else {
+          for (let m=5; m>=0; m--) {
+            const d=new Date(now.getFullYear(),now.getMonth()-m,1);
+            const cats={utbk:0,interview:0,english:0,ibadah:0}, moods=[];
+            const dim=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
+            for (let day=1; day<=dim; day++) {
+              const dd=new Date(d.getFullYear(),d.getMonth(),day); if(dd>now) break;
+              const dk=dateKey(dd), log=S.dayLogs[dk];
+              if (log?.checked) SCHEDULE.forEach(s=>{ if(log.checked[s.id]){ const c=norm(s.cat); if(cats[c]!==undefined)cats[c]++; } });
+              if (log?.mood) moods.push(log.mood);
+            }
+            data.push({ label:d.toLocaleDateString('id-ID',{month:'short'}), ...cats, moods });
+          }
+        }
+        return data;
+      }
+
+      function getMostFrequent(arr) {
+        if (!arr||!arr.length) return null;
+        const f={}; arr.forEach(m=>f[m]=(f[m]||0)+1);
+        return Object.entries(f).sort((a,b)=>b[1]-a[1])[0][0];
+      }
+
+      function renderAnalytics(f) {
+        const data = getAnalData(f);
+        const wrap = document.getElementById('chartWrap');
+        const W = wrap.clientWidth||720, H = 220;
+        const pad = { l:32, r:12, t:20, b:38 };
+        const maxVal = Math.max(...data.map(d=>d.utbk+d.interview+d.english+d.ibadah), 1);
+        const gW = (W-pad.l-pad.r)/data.length, bW = Math.min(32, gW*0.6);
+        const colors=['#e8c9a8','#9ecfbd','#c8b4d8','#f2b8cb'], catOrder=['ibadah','english','interview','utbk'];
+        let bars='', yLines='';
+
+        for (let i=0; i<=4; i++) {
+          const v=Math.round(maxVal*i/4), y=H-pad.b-(i/4)*(H-pad.t-pad.b);
+          yLines+=`<line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}" stroke="rgba(242,184,203,0.22)" stroke-width="1"/>`;
+          yLines+=`<text x="${pad.l-5}" y="${y+4}" text-anchor="end" font-size="9" fill="#b07888" font-family="DM Sans">${v}</text>`;
+        }
+        data.forEach((d,i) => {
+          const cx=pad.l+i*gW+gW/2; let sy=H-pad.b;
+          const tot=catOrder.reduce((a,c)=>a+(d[c]||0),0);
+          catOrder.forEach((cat,ci) => {
+            const val=d[cat]||0; if(!val) return;
+            const bH=(val/maxVal)*(H-pad.t-pad.b); sy-=bH;
+            bars+=`<rect x="${cx-bW/2}" y="${sy}" width="${bW}" height="${bH}" rx="3" fill="${colors[ci]}" opacity="0.88"/>`;
+          });
+          if (tot>0) { const tH=(tot/maxVal)*(H-pad.t-pad.b); bars+=`<text x="${cx}" y="${H-pad.b-tH-5}" text-anchor="middle" font-size="9" font-weight="600" fill="#7a4055" font-family="DM Sans">${tot}</text>`; }
+          bars+=`<text x="${cx}" y="${H-pad.b+14}" text-anchor="middle" font-size="9" fill="#b07888" font-family="DM Sans">${d.label}</text>`;
+        });
+        wrap.innerHTML = `<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="overflow:visible;">
+          ${yLines}
+          <line x1="${pad.l}" y1="${pad.t}" x2="${pad.l}" y2="${H-pad.b}" stroke="rgba(242,184,203,.5)" stroke-width="1.5"/>
+          <line x1="${pad.l}" y1="${H-pad.b}" x2="${W-pad.r}" y2="${H-pad.b}" stroke="rgba(242,184,203,.5)" stroke-width="1.5"/>
+          ${bars}
+        </svg>`;
+
+        document.getElementById('moodPeriodBadge').textContent = f==='daily'?'14 Hari':f==='weekly'?'8 Minggu':'6 Bulan';
+
+        const moodOrder=['😊','🥰','🤗','😌','🥺','😔','😤','😴'];
+        document.getElementById('moodTlWrap').innerHTML = `<div class="mood-tl">${data.map(d=>{
+          const top=d.mood||(d.moods?getMostFrequent(d.moods):null);
+          const mIdx=top?moodOrder.indexOf(top):-1;
+          const bH=top?((moodOrder.length-mIdx)/moodOrder.length*60+10):4;
+          return `<div class="mood-bw"><div class="mood-es">${top||'·'}</div><div class="mood-b" style="height:${bH}px;opacity:${top?1:.2};"></div><div class="mood-bl">${d.label}</div></div>`;
+        }).join('')}</div>`;
+
+        const allMoods={};
+        data.forEach(d=>{ if(d.mood)allMoods[d.mood]=(allMoods[d.mood]||0)+1; if(d.moods)d.moods.forEach(m=>{allMoods[m]=(allMoods[m]||0)+1;}); });
+        const md=Object.entries(allMoods).sort((a,b)=>b[1]-a[1]);
+        document.getElementById('analMoodDist').innerHTML = md.length
+          ? md.map(([m,c])=>`<div class="mood-ci"><span class="mce">${m}</span><div><div class="mcv">${c}x</div><div class="mcl">${MOOD_LABELS[m]||m}</div></div></div>`).join('')
+          : `<p style="font-size:12px;color:var(--text-4);">Belum ada mood yang dicatat.</p>`;
+
+        const totals=data.reduce((a,d)=>({utbk:a.utbk+d.utbk,interview:a.interview+d.interview,english:a.english+d.english,ibadah:a.ibadah+d.ibadah}),{utbk:0,interview:0,english:0,ibadah:0});
+        document.getElementById('analStats').innerHTML = `
+          <div class="stat-item"><div class="stat-num" style="color:#d4607a;">${totals.utbk}</div><div class="stat-lbl">UTBK</div></div>
+          <div class="stat-item"><div class="stat-num" style="color:#9a70b8;">${totals.interview}</div><div class="stat-lbl">Interview</div></div>
+          <div class="stat-item"><div class="stat-num" style="color:#5a9e7a;">${totals.english}</div><div class="stat-lbl">English</div></div>
+          <div class="stat-item"><div class="stat-num" style="color:#c8924a;">${totals.ibadah}</div><div class="stat-lbl">Ibadah</div></div>
+          <div class="stat-item"><div class="stat-num">${totals.utbk+totals.interview+totals.english+totals.ibadah}</div><div class="stat-lbl">Total</div></div>`;
+
+        // ── STREAK ──
+        const now2=new Date(); let streak=0;
+        for (let i=0; i<365; i++) {
+          const d=new Date(now2); d.setDate(now2.getDate()-i);
+          const log=S.dayLogs[dateKey(d)];
+          if (!log||!Object.values(log.checked||{}).some(Boolean)) break;
+          streak++;
+        }
+        const active=Object.values(S.dayLogs).filter(l=>Object.values(l.checked||{}).some(Boolean)).length;
+        const best=Object.entries(S.dayLogs).reduce((b,[dk,l])=>{ const d=Object.values(l.checked||{}).filter(Boolean).length; return d>b.d?{dk,d}:b; },{dk:null,d:0});
+
+        const streakMsgs7 = [
+          `🔥 ${streak} hari berturut-turut tanpa putus! ini tuh bukan keberuntungan, ini karakter kamu. bian bangga banget sayang 💕`,
+          `🌟 ${streak} hari streak! kamu udah buktiin ke diri sendiri bahwa kamu bisa konsisten. itu hal yang ga semua orang punya 💘`,
+          `✨ ${streak} hari dan masih terus jalan! di titik ini kamu udah beda dari kebanyakan orang. terusin ya darling 🌸`,
+          `💫 ${streak} hari ga putus sedikit pun! bian lihat betapa serius kamu sama tujuan kamu. dan itu bikin bian makin cinta 🌟`,
+          `🏆 ${streak} hari konsisten! banyak yang nyerah di angka yang jauh lebih kecil. tapi kamu masih di sini. luar biasa 💕`,
+          `🔥 ${streak} hari! setiap pagi kamu bangun dan milih untuk tetap jalan. itu bukan hal kecil sayang. bian proud banget 💫`,
+          `🌸 ${streak} hari berturut-turut! kamu lagi ngebangun versi terbaik diri kamu satu hari dalam satu waktu. terus ya 💝`,
+        ];
+        const streakMsgs3 = [
+          `✨ ${streak} hari streak! momentumnya udah ada, jangan diputus sekarang ya darling. bian excited ngeliat kamu terus maju 💕`,
+          `🌷 ${streak} hari berturut-turut! kebiasaan bagus lagi terbentuk nih. jaga terus sampai jadi second nature kamu 🌸`,
+          `💪 ${streak} hari! ${streak===3?'tiga':streak===4?'empat':streak===5?'lima':streak} hari ini udah cukup buat buktiin kamu serius. terusin ya, jangan kasih celah buat berhenti 💫`,
+          `🍀 ${streak} hari dan momentum lagi dibangun! yang paling susah tuh udah lewat, sekarang tinggal jaga ritmenya 💝`,
+          `🌿 ${streak} hari streak! kamu lagi di fase paling kritis, kalau bisa lewatin ini bakal jadi habit yang kuat banget 💕`,
+          `🎯 ${streak} hari berturut-turut! tiap hari yang kamu tambahkan itu bikin streak ini makin berharga. jangan stop sekarang 🌟`,
+        ];
+        const streakMsgs1 = [
+          `🌸 hari pertama streak baru dimulai! ini selalu jadi langkah yang paling susah dan paling berani. bian proud 💕`,
+          `✨ satu hari ini adalah fondasi dari streak panjang yang mau kamu bangun. jaga besok juga ya sayang 🌷`,
+          `💕 streak selalu dimulai dari satu. dan kamu udah ada di sana. besok tambahin satu lagi ya darling 🌸`,
+          `🫶 hari pertama streak baru! yang penting udah mulai. besok kita buktiin bisa dua hari berturut-turut ya 💫`,
+          `🌿 dari satu hari ini, kamu lagi bangun sesuatu. jaga besok, lusa, dan seterusnya ya sayang 💝`,
+        ];
+        const streakMsgs0 = [
+          `💕 streak bisa dibangun ulang dari hari ini. hari ini hari pertama streak baru kamu. mulai lagi ya sayang 🌸`,
+          `🤍 streak putus itu bukan akhir darling. hari ini reset, besok kita mulai bangun lagi dari nol. bian di sini 💕`,
+          `🌿 ga apa-apa, hari ini bisa jadi awal streak baru yang lebih panjang dari sebelumnya. bian percaya kamu bisa 🫶`,
+          `🌷 streak baru selalu bisa dimulai. yang penting hari ini kamu mau mulai lagi. itu udah keren banget darling 💫`,
+          `🌸 hari ini hari pertama lagi. kali ini kita jaga lebih lama ya sayang. bian excited nemenin kamu dari sini 💕`,
+        ];
+
+        const msg = streak>=7 ? pick(streakMsgs7) : streak>=3 ? pick(streakMsgs3) : streak===1 ? pick(streakMsgs1) : pick(streakMsgs0);
+        document.getElementById('streakSec').innerHTML = `
+          <div class="stat-grid" style="margin-bottom:14px;">
+            <div class="stat-item"><div class="stat-num">🔥 ${streak}</div><div class="stat-lbl">Streak</div></div>
+            <div class="stat-item"><div class="stat-num">${active}</div><div class="stat-lbl">Total Hari</div></div>
+            <div class="stat-item"><div class="stat-num">${best.d}</div><div class="stat-lbl">Rekor Terbaik</div></div>
+          </div>
+          <div class="streak-banner"><p>${msg}</p></div>`;
+      }
+
+      // ── HABITS ──
+      function renderHabits() {
+        const now=new Date(), days30=[];
+        for (let i=29; i>=0; i--) { const d=new Date(now); d.setDate(now.getDate()-i); days30.push(dateKey(d)); }
+        const ce={ibadah:'🕌',belajar:'📚',kesehatan:'💪',lainnya:'✨'};
+        document.getElementById('habitGrid').innerHTML = S.habits.map(h => {
+          const logs=S.habitLogs[h.id]||{}, count=days30.filter(dk=>logs[dk]).length;
+          const dots=days30.map(dk=>`<div class="h-dot ${logs[dk]?'filled':''}" onclick="toggleHabit('${h.id}','${dk}')">${logs[dk]?'✓':''}</div>`).join('');
+          return `<div class="habit-row">
+            <div class="hname">${ce[h.cat]||'✨'} ${h.name}</div>
+            <div class="hdots">${dots}</div>
+            <div class="hcount">${count}/30</div>
+            <button onclick="removeHabit('${h.id}')" style="background:none;border:none;cursor:pointer;color:var(--text-4);font-size:12px;padding:2px 6px;" title="Hapus">✕</button>
+          </div>`;
+        }).join('');
+      }
+
+      function toggleHabit(hid, dk) {
+        if (!S.habitLogs[hid]) S.habitLogs[hid]={};
+        S.habitLogs[hid][dk]=!S.habitLogs[hid][dk];
+        persist(); renderHabits();
+      }
+
+      function addHabit() {
+        const name=document.getElementById('newHabitName').value.trim(); if(!name) return;
+        const cat=document.getElementById('newHabitCat').value;
+        S.habits.push({id:'h'+Date.now(), name, cat});
+        document.getElementById('newHabitName').value='';
+        persist(); renderHabits();
+        showToast('Kebiasaan baru ditambahkan! Semangat Kila 🌿', 'success');
+      }
+
+      function removeHabit(id) { S.habits=S.habits.filter(h=>h.id!==id); persist(); renderHabits(); }
+
+      // ── TOAST ──
+      function showToast(msg, type='info') {
+        document.querySelectorAll('.toast').forEach(t=>t.remove());
+        const t=document.createElement('div'); t.className=`toast ${type}`; t.textContent=msg; document.body.appendChild(t);
+        setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateY(10px)'; t.style.transition='all .3s'; setTimeout(()=>t.remove(),300); }, 3200);
+      }
+
+      // ── INIT ──
+      function init() {
+        load();
+        const now=new Date();
+        document.getElementById('dateDay').textContent=now.getDate();
+        document.getElementById('dateLbl').textContent=now.toLocaleDateString('id-ID',{month:'long',year:'numeric'});
+        renderProgress(); renderSchedule(); renderMood(); renderNotes(); renderPhoto();
+        setHeaderSubtitle();
+        document.getElementById('dailyNotes').addEventListener('input', e=>{ S.todayNotes=e.target.value; persist(); });
+      }
+      init();
+    </script>
+  </body>
+</html>
