@@ -2,6 +2,11 @@
 
 DataFlow is a production-ready autonomous data analysis system with a beautiful glassmorphism UI. Upload CSV files and get AI-powered insights, interactive charts, predictions, and comprehensive analytics.
 
+<img width="1800" height="1012" alt="Screenshot 2026-03-24 at 21 39 35" src="https://github.com/user-attachments/assets/d08d92cd-3d32-42ae-a61c-453550b38cec" />
+<img width="1794" height="1005" alt="Screenshot 2026-03-24 at 21 40 08" src="https://github.com/user-attachments/assets/f93c00b9-a5a7-4098-b7c7-12d1cbf023d5" />
+
+
+
 ## Features
 
 ### Core Capabilities
@@ -232,6 +237,13 @@ The platform features a modern glassmorphism design with:
 - Drag and drop file upload
 - Custom analytics workspace
 - Dashboard with pinned charts
+
+<img width="1794" height="1005" alt="Screenshot 2026-03-24 at 21 40 08" src="https://github.com/user-attachments/assets/f93c00b9-a5a7-4098-b7c7-12d1cbf023d5" />
+<img width="1321" height="805" alt="Screenshot 2026-03-24 at 21 41 10" src="https://github.com/user-attachments/assets/c476de03-e35c-48c8-acb1-9e0c2545c260" />
+<img width="1800" height="996" alt="Screenshot 2026-03-24 at 21 41 47" src="https://github.com/user-attachments/assets/2a096988-fb5a-4a28-b665-2f1aadea141a" />
+<img width="1800" height="1000" alt="Screenshot 2026-03-24 at 21 42 26" src="https://github.com/user-attachments/assets/c0761da7-858d-4ad1-b31d-260339066c65" />
+<img width="1796" height="1005" alt="Screenshot 2026-03-24 at 21 45 31" src="https://github.com/user-attachments/assets/5fd5877e-c294-41cc-9d4a-fdec3594b027" />
+
 
 ## License
 
