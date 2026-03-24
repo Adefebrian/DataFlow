@@ -1,43 +1,37 @@
-# DataFlow — Enterprise Analytics Platform
+# DataFlow - Enterprise Analytics Platform
 
-A production-ready autonomous data analysis system with a beautiful glassmorphism UI. Upload CSV files and get AI-powered insights, interactive charts, predictions, and comprehensive analytics.
-
-![DataFlow Analytics](https://img.shields.io/badge/DataFlow-Analytics-blue)
-![Python](https://img.shields.io/badge/Python-3.12-blue)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.109+-green)
-![React](https://img.shields.io/badge/React-18-blue)
-![License](https://img.shields.io/badge/License-MIT-yellow)
+DataFlow is a production-ready autonomous data analysis system with a beautiful glassmorphism UI. Upload CSV files and get AI-powered insights, interactive charts, predictions, and comprehensive analytics.
 
 ## Features
 
 ### Core Capabilities
-- **CSV Upload & Processing** — Drag-and-drop CSV files for instant analysis
-- **Auto Data Profiling** — Automatic data type detection, statistics, and quality assessment
-- **Data Cleaning** — Automatic handling of missing values, outliers, and duplicates
-- **Feature Engineering** — Intelligent feature creation and transformation
+- **CSV Upload and Processing** - Drag and drop CSV files for instant analysis
+- **Auto Data Profiling** - Automatic data type detection, statistics, and quality assessment
+- **Data Cleaning** - Automatic handling of missing values, outliers, and duplicates
+- **Feature Engineering** - Intelligent feature creation and transformation
 
 ### AI-Powered Analytics
-- **Smart Chart Selection** — AI recommends the best visualization for your data
-- **Automated Insights** — Generate business insights using LLM (Hyperbolic API)
-- **Anti-Hallucination** — Validates AI-generated insights against actual data
-- **Custom Analytics** — Tableau/Power BI-style free-form workspace
+- **Smart Chart Selection** - AI recommends the best visualization for your data
+- **Automated Insights** - Generate business insights using LLM (Hyperbolic API)
+- **Anti-Hallucination** - Validates AI-generated insights against actual data
+- **Custom Analytics** - Tableau and Power BI style free-form workspace
 
 ### Visualizations
-- **30+ Chart Types** — Bar, line, area, pie, donut, treemap, scatter, heatmap, and more
-- **Interactive Charts** — Zoom, pan, hover tooltips, real-time updates
-- **Prediction Charts** — Trend projection, moving averages, growth rate forecasting
-- **Custom Analytics** — Build custom dashboards with multiple charts
+- **30+ Chart Types** - Bar, line, area, pie, donut, treemap, scatter, heatmap, and more
+- **Interactive Charts** - Zoom, pan, hover tooltips, real-time updates
+- **Prediction Charts** - Trend projection, moving averages, growth rate forecasting
+- **Custom Analytics** - Build custom dashboards with multiple charts
 
-### Dashboard & Reporting
-- **My Dashboard** — Pin and arrange favorite visualizations
-- **PDF Export** — Export dashboards and reports as PDF
-- **HTML Reports** — Beautiful dark-themed reports with all analytics
-- **Currency-Aware KPIs** — Support for USD, IDR, EUR, GBP, JPY, SGD
+### Dashboard and Reporting
+- **My Dashboard** - Pin and arrange favorite visualizations
+- **PDF Export** - Export dashboards and reports as PDF
+- **HTML Reports** - Beautiful dark-themed reports with all analytics
+- **Currency-Aware KPIs** - Support for USD, IDR, EUR, GBP, JPY, SGD
 
 ## Quick Start
 
 ### Prerequisites
-- Docker & Docker Compose
+- Docker and Docker Compose
 - Python 3.12+ (for local development)
 - Node.js 20+ (for frontend development)
 
@@ -46,8 +40,8 @@ A production-ready autonomous data analysis system with a beautiful glassmorphis
 #### Production Mode
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/dataflow.git
-cd dataflow
+git clone https://github.com/Adefebrian/DataFlow.git
+cd DataFlow
 
 # Start production (nginx static build)
 make up
@@ -66,7 +60,7 @@ docker compose --profile dev up -d
 ```
 
 **Access**: http://localhost:3000  
-**Login**: `admin` / `admin123`
+**Login**: admin / admin123
 
 ### Option 2: Local Development
 
@@ -103,11 +97,11 @@ Create a `.env` file based on `.env.example`:
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `DATABASE_URL` | PostgreSQL connection string | SQLite (local) |
-| `REDIS_URL` | Redis connection string | None |
-| `HYPERBOLIC_API_KEY` | API key for AI insights | Required |
-| `USE_SQLITE` | Use SQLite instead of PostgreSQL | `true` |
-| `R2_*` | Cloudflare R2 storage (optional) | None |
+| DATABASE_URL | PostgreSQL connection string | SQLite (local) |
+| REDIS_URL | Redis connection string | None |
+| HYPERBOLIC_API_KEY | API key for AI insights | Required |
+| USE_SQLITE | Use SQLite instead of PostgreSQL | true |
+| R2_* | Cloudflare R2 storage (optional) | None |
 
 ### Getting a Hyperbolic API Key
 1. Visit [hyperbolic.xyz](https://hyperbolic.xyz)
@@ -118,7 +112,7 @@ Create a `.env` file based on `.env.example`:
 ## Project Structure
 
 ```
-dataflow/
+DataFlow/
 ├── Makefile                     # Docker shortcuts
 ├── docker-compose.yml           # Multi-container setup
 ├── Dockerfile                   # Backend (Python/FastAPI)
@@ -153,7 +147,7 @@ dataflow/
     └── src/
         ├── pages/               # React pages
         ├── components/          # UI components
-        ├── hooks/               # Custom hooks
+        ├── hooks/              # Custom hooks
         └── ...
 ```
 
@@ -161,13 +155,13 @@ dataflow/
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/auth/login` | User authentication |
-| POST | `/upload` | Upload CSV file |
-| POST | `/pipeline/run` | Start analysis pipeline |
-| GET | `/pipeline/{job_id}/status` | Get job status |
-| GET | `/pipeline/{job_id}/analytics` | Get analytics results |
-| GET | `/pipeline/all` | List all jobs |
-| GET | `/health` | Health check |
+| POST | /auth/login | User authentication |
+| POST | /upload | Upload CSV file |
+| POST | /pipeline/run | Start analysis pipeline |
+| GET | /pipeline/{job_id}/status | Get job status |
+| GET | /pipeline/{job_id}/analytics | Get analytics results |
+| GET | /pipeline/all | List all jobs |
+| GET | /health | Health check |
 
 ## Docker Commands
 
@@ -189,59 +183,59 @@ make shell       # Shell into container
 2. Connect GitHub to Render
 3. Create a new Web Service
 4. Settings:
-   - Build Command: `pip install -r requirements.txt`
-   - Start Command: `uvicorn src.api.routes:app --host 0.0.0.0 --port $PORT`
+   - Build Command: pip install -r requirements.txt
+   - Start Command: uvicorn src.api.routes:app --host 0.0.0.0 --port $PORT
 
 ### Railway
 
 1. Install Railway CLI
-2. `railway init`
-3. `railway up`
+2. Run: railway init
+3. Run: railway up
 4. Set environment variables in Railway dashboard
 
 ### Fly.io
 
 1. Install Fly CLI
-2. `fly launch`
-3. `fly deploy`
+2. Run: fly launch
+3. Run: fly deploy
 
 ### Heroku
 
-1. Create `Procfile`:
+1. Create a Procfile with:
    ```
    web: uvicorn src.api.routes:app --host 0.0.0.0 --port $PORT
    ```
-2. `heroku create`
-3. `git push heroku main`
+2. Run: heroku create
+3. Run: git push heroku main
 
 ## Tech Stack
 
 ### Backend
-- **FastAPI** — Modern Python web framework
-- **Pandas** — Data manipulation
-- **LangGraph** — AI agent orchestration
-- **Plotly** — Interactive charts
-- **SQLite/PostgreSQL** — Database
+- FastAPI - Modern Python web framework
+- Pandas - Data manipulation
+- LangGraph - AI agent orchestration
+- Plotly - Interactive charts
+- SQLite/PostgreSQL - Database
 
 ### Frontend
-- **React 18** — UI framework
-- **Vite** — Build tool
-- **Tailwind CSS** — Styling
-- **Plotly.js** — Chart rendering
-- **Recharts** — Additional charts
+- React 18 - UI framework
+- Vite - Build tool
+- Tailwind CSS - Styling
+- Plotly.js - Chart rendering
+- Recharts - Additional charts
 
 ## Screenshots
 
 The platform features a modern glassmorphism design with:
 - Dark theme by default
 - Interactive charts with tooltips
-- Drag-and-drop file upload
+- Drag and drop file upload
 - Custom analytics workspace
 - Dashboard with pinned charts
 
 ## License
 
-MIT License — feel free to use for personal and commercial projects.
+MIT License - feel free to use for personal and commercial projects.
 
 ## Support
 
@@ -249,4 +243,4 @@ For issues and feature requests, please open a GitHub issue.
 
 ---
 
-Built with ❤️ using FastAPI + React + Plotly
+Built with love using FastAPI, React, and Plotly

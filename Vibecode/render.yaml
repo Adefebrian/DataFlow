@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: dataflow-api
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn src.api.routes:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12"
+      - key: USE_SQLITE
+        value: "true"
+      - key: HYPERBOLIC_API_KEY
+        sync: false
+    autoDeploy: true
+    repo: https://github.com/Adefebrian/DataFlow.git
