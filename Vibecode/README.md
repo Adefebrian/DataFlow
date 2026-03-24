@@ -235,11 +235,13 @@ The platform features a modern glassmorphism design with:
 
 ## License
 
-MIT License - feel free to use for personal and commercial projects.
+Personal Use Only - This software is for personal use only. Commercial use is not permitted.
 
-## Support
+## Contact
 
-For issues and feature requests, please open a GitHub issue.
+For questions or inquiries:
+- Instagram: @prerich.brian
+- Email: adefebrianpro@gmail.com
 
 ---
 
