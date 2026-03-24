@@ -1,0 +1,53 @@
+services:
+  # ── Backend API ─────────────────────────────────────────────────────────────
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - HYPERBOLIC_API_KEY=${HYPERBOLIC_API_KEY}
+      - USE_SQLITE=${USE_SQLITE:-true}
+      - R2_ACCOUNT_ID=${R2_ACCOUNT_ID:-}
+      - R2_ACCESS_KEY_ID=${R2_ACCESS_KEY_ID:-}
+      - R2_SECRET_ACCESS_KEY=${R2_SECRET_ACCESS_KEY:-}
+      - R2_BUCKET_NAME=${R2_BUCKET_NAME:-dataflow-local}
+    volumes:
+      - ./data:/app/data
+      - ./sample_data.csv:/app/sample_data.csv:ro
+      - ./sample_large_data.csv:/app/sample_large_data.csv:ro
+    restart: unless-stopped
+
+  # ── Frontend — Dev (hot-reload, Vite) ────────────────────────────────────
+  # Usage: docker compose --profile dev up
+  frontend-dev:
+    profiles: [dev]
+    image: node:20-alpine
+    working_dir: /app
+    command: sh -c "npm install && npm run dev"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app          # live source mount — edits reflect instantly
+      - /app/node_modules        # keep container's node_modules separate
+    environment:
+      - VITE_API_URL=http://api:8000
+      - CHOKIDAR_USEPOLLING=true  # reliable file-watching in Docker
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  # ── Frontend — Production (nginx, static build) ──────────────────────────
+  # Usage: docker compose up   (default profile)
+  frontend:
+    profiles: [prod]
+    build:
+      context: ./frontend
+      args:
+        - VITE_API_URL=http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    restart: unless-stopped

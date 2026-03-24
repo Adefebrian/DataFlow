@@ -1,0 +1,51 @@
+database:
+  url: "${DATABASE_URL}"
+  pool_size: 20
+  max_overflow: 10
+
+redis:
+  url: "${REDIS_URL}"
+
+r2:
+  account_id: "${R2_ACCOUNT_ID}"
+  access_key_id: "${R2_ACCESS_KEY_ID}"
+  secret_access_key: "${R2_SECRET_ACCESS_KEY}"
+  bucket_name: "${R2_BUCKET_NAME}"
+
+llm:
+  base_url: "https://api.hyperbolic.xyz/v1"
+  api_key: "${HYPERBOLIC_API_KEY}"
+
+  models:
+    # FAST: structured output, JSON formatting, classification
+    fast: "Qwen/Qwen3-8B"
+    # BALANCED: feature engineering, report narrative, chart context
+    balanced: "Qwen/Qwen3-Next-80B-A3B-Instruct"
+    # REASONING: deep insight generation, pattern discovery
+    reasoning: "deepseek-ai/DeepSeek-R1-0528"
+
+  config:
+    structured_output:
+      temperature: 0.0
+      top_p: 1.0
+      max_tokens: 2048
+    narrative_generation:
+      temperature: 0.3
+      top_p: 0.9
+      max_tokens: 3000
+    reasoning:
+      temperature: 0.6
+      top_p: 0.95
+      max_tokens: 8000
+    classification:
+      temperature: 0.0
+      max_tokens: 100
+
+pipeline:
+  max_retries: 3
+  checkpoint_dir: "/data/checkpoints"
+  max_chart_count: 12
+
+antihalucination:
+  max_tokens_before_refresh: 80000
+  cache_ttl_seconds: 86400

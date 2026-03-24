@@ -1,0 +1,12 @@
+  const exportPNG = () => {
+    if (!chartRef.current) return
+    const svgEl = chartRef.current.querySelector('svg')
+    if (!svgEl) { alert('No chart to export yet.'); return }
+    const serialized = new XMLSerializer().serializeToString(svgEl)
+    const blob = new Blob([serialized], { type: 'image/svg+xml' })
+    const a = document.createElement('a')
+    a.download = `${cfg.title || 'chart'}.svg`
+    a.href = URL.createObjectURL(blob)
+    a.click()
+    URL.revokeObjectURL(a.href)
+  }
